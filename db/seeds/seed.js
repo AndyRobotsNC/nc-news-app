@@ -35,7 +35,7 @@ const seed = (data) => {
       CREATE TABLE articles (
         article_id SERIAL PRIMARY KEY,
         title VARCHAR(100) NOT NULL,
-        body TEXT,
+        body TEXT NOT NULL,
         votes INTEGER DEFAULT 0,
         topic VARCHAR(50) REFERENCES topics (slug),
         author VARCHAR(50) REFERENCES users (username),
@@ -50,7 +50,7 @@ const seed = (data) => {
         article_id INTEGER REFERENCES articles (article_id),
         votes INTEGER DEFAULT 0,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        body TEXT
+        body TEXT NOT NULL
     );`);
     })
     .then(() => {

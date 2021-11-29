@@ -23,6 +23,14 @@ describe("GET /api/topics", () => {
         });
       });
   });
+  test('status 404: responds with an error message when passed an invalid path"', () => {
+    return request(app)
+      .get("/api/toopics")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid path");
+      });
+  });
 });
 
 afterAll(() => db.end());

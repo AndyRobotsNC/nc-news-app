@@ -19,7 +19,7 @@ const seed = (data) => {
       return db.query(`
       CREATE TABLE topics (
         slug VARCHAR(50) PRIMARY KEY,
-        description VARCHAR(255)
+        description VARCHAR(255) NOT NULL
       );`);
     })
     .then(() => {

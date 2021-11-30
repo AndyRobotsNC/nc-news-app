@@ -55,6 +55,22 @@ describe("GET /api/articles/:article_id", () => {
         );
       });
   });
+  test("status 400: Bad article_id", () => {
+    return request(app)
+      .get("/api/articles/hello")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid input");
+      });
+  });
+  test("status 404: article_id not found", () => {
+    return request(app)
+      .get("/api/articles/9000")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Article not found");
+      });
+  });
 });
 
 afterAll(() => db.end());

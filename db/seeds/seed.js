@@ -39,7 +39,8 @@ const seed = (data) => {
         votes INTEGER DEFAULT 0,
         topic VARCHAR(50) REFERENCES topics (slug),
         author VARCHAR(50) REFERENCES users (username),
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        comment_count INTEGER DEFAULT 0
       );`);
     })
     .then(() => {

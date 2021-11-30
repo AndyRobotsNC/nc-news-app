@@ -16,11 +16,12 @@ describe("GET /api/topics", () => {
         expect(body).toBeInstanceOf(Object);
         expect(body.topics).toHaveLength(3);
         body.topics.forEach((topic) => {
-          expect.objectContaining({
-            slug: expect.any(String),
-            description: expect.any(String),
-          });
-          console.log(body);
+          expect(topic).toEqual(
+            expect.objectContaining({
+              slug: expect.any(String),
+              description: expect.any(String),
+            })
+          );
         });
       });
   });
@@ -41,14 +42,17 @@ describe("GET /api/articles/:article_id", () => {
       .then((response) => {
         const { body } = response;
         expect(body).toBeInstanceOf(Object);
-        expect.objectContaining({
-          article_id: expect.any(Number),
-          title: expect.any(String),
-          body: expect.any(String),
-          votes: expect.any(Number),
-          topic: expect.any(String),
-          author: expect.any(String),
-        });
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            body: expect.any(String),
+            votes: expect.any(Number),
+            topic: expect.any(String),
+            author: expect.any(String),
+            comment_count: expect.any(Number),
+          })
+        );
       });
   });
 });

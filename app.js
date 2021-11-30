@@ -6,7 +6,7 @@ app.use(express.json());
 
 app.use("/api", apiRouter);
 
-app.use("/*", (req, res, next) => {
+app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "Invalid path" });
 });
 

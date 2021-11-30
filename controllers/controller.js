@@ -1,4 +1,8 @@
-const { getTopicsData, fetchArticleData } = require("../models/models");
+const {
+  getTopicsData,
+  fetchArticleData,
+  fetchUpdatedVotes,
+} = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
   getTopicsData()
@@ -13,6 +17,15 @@ exports.getArticleByID = (req, res, next) => {
   fetchArticleData(article_id)
     .then((article) => {
       res.status(200).send({ article: article });
+    })
+    .catch(next);
+};
+exports.patchArticleByID = (req, res, next) => {
+  const { article_id } = req.params;
+  const updatedVotes = req.body.inc_votes;
+  fetchUpdatedVotes(article_id, updatedVotes)
+    .then((updatedArticle) => {
+      res.status(200).send(updatedArticle);
     })
     .catch(next);
 };

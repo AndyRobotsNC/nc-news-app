@@ -31,3 +31,17 @@ exports.fetchArticleData = async (id) => {
     }
   );
 };
+exports.fetchUpdatedVotes = (id, votes) => {
+  return db
+    .query(
+      `
+  UPDATE articles
+  SET
+  votes = votes + ${votes}
+  WHERE article_id = ${id}
+  RETURNING *;`
+    )
+    .then(({ rows }) => {
+      return { article: rows[0] };
+    });
+};

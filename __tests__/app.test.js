@@ -72,5 +72,29 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+describe("PATCH /api/articles/:article_id", () => {
+  test("status 200: responds with the updated article", () => {
+    const articleUpdate = {
+      inc_votes: 1,
+    };
+    return request(app)
+      .patch("/api/articles/3")
+      .send(articleUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            body: expect.any(String),
+            votes: 1,
+            topic: expect.any(String),
+            author: expect.any(String),
+            comment_count: expect.any(Number),
+          })
+        );
+      });
+  });
+});
 
 afterAll(() => db.end());

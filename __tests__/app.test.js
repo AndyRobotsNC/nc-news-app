@@ -95,6 +95,16 @@ describe("PATCH /api/articles/:article_id", () => {
         );
       });
   });
+  test("status 400: malformed body/missing required fields", () => {
+    const articleUpdate = {};
+    return request(app)
+      .patch("/api/articles/3")
+      .send(articleUpdate)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("malformed body/missing required fields");
+      });
+  });
 });
 
 afterAll(() => db.end());

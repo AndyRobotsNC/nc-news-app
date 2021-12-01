@@ -32,6 +32,12 @@ exports.fetchArticleData = async (id) => {
   );
 };
 exports.fetchUpdatedVotes = (id, votes) => {
+  if (isNaN(votes)) {
+    return Promise.reject({
+      status: 400,
+      msg: "malformed body/missing required fields",
+    });
+  }
   return db
     .query(
       `

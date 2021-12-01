@@ -13,7 +13,10 @@ exports.getTopics = (req, res, next) => {
     .catch(next);
 };
 exports.getAllArticles = (req, res, next) => {
-  fetchAllArticles().then((articles) => {
+  const sortBy = req.query.sort_by;
+  const orderBy = req.query.order_by;
+  const topic = req.query.topic;
+  fetchAllArticles(sortBy, orderBy).then((articles) => {
     res.status(200).send({ articles: articles });
   });
 };

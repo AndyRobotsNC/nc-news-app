@@ -5,10 +5,29 @@ exports.getTopicsData = () => {
     return topics.rows;
   });
 };
-exports.fetchAllArticles = async () => {
-  const articles = db.query(`SELECT * FROM articles;`).then((articles) => {
-    return articles.rows;
-  });
+exports.fetchAllArticles = async (sort_by, order_by) => {
+  if (
+    ![
+      "author",
+      "title",
+      "article_id",
+      "topic",
+      "created_at",
+      "votes",
+      "comment_count",
+    ].includes(sort_by)
+  ) {
+    sort_by = "created_at";
+  }
+  if (order_by != "asc") {
+    order_by = "desc";
+  }
+
+  const articles = db
+    .query(`SELECT * FROM articles ORDER BY ${sort_by} ${order_by};`)
+    .then((articles) => {
+      return articles.rows;
+    });
   const commentsInfo = await db.query(`
     SELECT articles.article_id, 
     COUNT(comment_id) AS number_of_comments 

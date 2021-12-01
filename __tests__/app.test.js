@@ -140,6 +140,58 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  test("status 404: responds with an error message when passed an invalid path", () => {
+    return request(app)
+      .get("/api/articels")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid path");
+      });
+  });
+  describe("GET /api/articles?sort_by=&&order_by=", () => {
+    test("status 200: returns a sorted and ordered array", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&&order_by=asc")
+        .expect(200)
+        .then((res) => {
+          const { body } = res;
+          expect(body).toBeInstanceOf(Object);
+          expect(body.articles).toHaveLength(12);
+          expect(body.articles[0]).toEqual(
+            expect.objectContaining({
+              author: "icellusedkars",
+              title: "A",
+              article_id: 6,
+              topic: "mitch",
+              created_at: "2020-10-18T02:00:00.000Z",
+              votes: 0,
+              comment_count: 1,
+            })
+          );
+        });
+    });
+    test("status 200: defaults sorted_by date and descending", () => {
+      return request(app)
+        .get("/api/articles?sort_by=profile&&order_by=a")
+        .expect(200)
+        .then((res) => {
+          const { body } = res;
+          expect(body).toBeInstanceOf(Object);
+          expect(body.articles).toHaveLength(12);
+          expect(body.articles[0]).toEqual(
+            expect.objectContaining({
+              author: "icellusedkars",
+              title: "Eight pug gifs that remind me of mitch",
+              article_id: 3,
+              topic: "mitch",
+              created_at: "2020-11-03T09:12:00.000Z",
+              votes: 0,
+              comment_count: 2,
+            })
+          );
+        });
+    });
+  });
 });
 
 afterAll(() => db.end());

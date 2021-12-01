@@ -148,7 +148,7 @@ describe("GET /api/articles", () => {
         expect(res.body.msg).toBe("Invalid path");
       });
   });
-  describe("GET /api/articles?sort_by=&&order_by=", () => {
+  describe("GET /api/articles?sort_by=&&order_by=&&topic=", () => {
     test("status 200: returns a sorted and ordered array", () => {
       return request(app)
         .get("/api/articles?sort_by=title&&order_by=asc")
@@ -189,6 +189,16 @@ describe("GET /api/articles", () => {
               comment_count: 2,
             })
           );
+        });
+    });
+    test("status 200: returns an array of the chosen topic", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((res) => {
+          const { body } = res;
+          expect(body).toBeInstanceOf(Object);
+          expect(body.articles).toHaveLength(11);
         });
     });
   });

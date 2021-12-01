@@ -201,6 +201,14 @@ describe("GET /api/articles", () => {
           expect(body.articles).toHaveLength(11);
         });
     });
+    test("status 404: responds with an error message when topic does not exist", () => {
+      return request(app)
+        .get("/api/articles?topic=cars")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("Topic not found");
+        });
+    });
   });
 });
 

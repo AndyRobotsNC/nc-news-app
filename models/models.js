@@ -23,13 +23,16 @@ exports.fetchAllArticles = async (sort_by, order_by, sortTopic) => {
     order_by = "desc";
   }
 
-  const topicArr = db.query(`SELECT DISTINCT topic FROM articles;`);
+  let queryStr = "";
+  if (typeof sortTopic === "undefined") {
+    queryStr = `SELECT * FROM articles ORDER BY ${sort_by} ${order_by};`;
+  } else {
+    queryStr = `SELECT * FROM articles WHERE topic = '${sortTopic}' ORDER BY ${sort_by} ${order_by};`;
+  }
 
-  const articles = db
-    .query(`SELECT * FROM articles ORDER BY ${sort_by} ${order_by};`)
-    .then((articles) => {
-      return articles.rows;
-    });
+  const articles = db.query(queryStr).then((articles) => {
+    return articles.rows;
+  });
   const commentsInfo = db.query(`
     SELECT articles.article_id, 
     COUNT(comment_id) AS number_of_comments 
@@ -37,8 +40,8 @@ exports.fetchAllArticles = async (sort_by, order_by, sortTopic) => {
     LEFT JOIN comments on comments.article_id = articles.article_id
     GROUP BY articles.article_id;`);
 
-  return Promise.all([articles, commentsInfo, topicArr]).then(
-    ([articles, commentsInfo, topicArr]) => {
+  return Promise.all([articles, commentsInfo]).then(
+    ([articles, commentsInfo]) => {
       articles.forEach((article) => {
         let articleCommentCount = commentsInfo.rows.find((comment) => {
           return comment.article_id === article.article_id;
@@ -48,18 +51,6 @@ exports.fetchAllArticles = async (sort_by, order_by, sortTopic) => {
           articleCommentCount.number_of_comments
         );
       });
-      filteredTopicArr = topicArr.rows.map((topic) => {
-        return Object.values(topic);
-      });
-      filteredTopicArr = filteredTopicArr.flat();
-      if (filteredTopicArr.includes(sortTopic)) {
-        const topicArticles = articles.filter((article) => {
-          if (article.topic === sortTopic) {
-            return article;
-          }
-        });
-        return topicArticles;
-      }
       return articles;
     }
   );

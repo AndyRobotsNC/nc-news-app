@@ -17,7 +17,11 @@ exports.getAllArticles = (req, res, next) => {
   const orderBy = req.query.order_by;
   const topic = req.query.topic;
   fetchAllArticles(sortBy, orderBy, topic).then((articles) => {
-    res.status(200).send({ articles: articles });
+    if (articles.length === 0) {
+      res.status(404).send({ msg: "Topic not found" });
+    } else {
+      res.status(200).send({ articles: articles });
+    }
   });
 };
 exports.getArticleByID = (req, res, next) => {

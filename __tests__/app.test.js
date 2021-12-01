@@ -11,8 +11,8 @@ describe("GET /api/topics", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
-      .then((response) => {
-        const { body } = response;
+      .then((res) => {
+        const { body } = res;
         expect(body).toBeInstanceOf(Object);
         expect(body.topics).toHaveLength(3);
         body.topics.forEach((topic) => {
@@ -95,7 +95,7 @@ describe("PATCH /api/articles/:article_id", () => {
         );
       });
   });
-  test("status 400: malformed body/missing required fields", () => {
+  test("status 400: missing required fields", () => {
     const articleUpdate = {};
     return request(app)
       .patch("/api/articles/3")
@@ -103,6 +103,41 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toEqual("malformed body/missing required fields");
+      });
+  });
+  test("status 400: malformed body", () => {
+    const articleUpdate = { inc_votes: "banana" };
+    return request(app)
+      .patch("/api/articles/3")
+      .send(articleUpdate)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("malformed body/missing required fields");
+      });
+  });
+});
+describe("GET /api/articles", () => {
+  test("status 200: returns an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        const { body } = res;
+        expect(body).toBeInstanceOf(Object);
+        expect(body.articles).toHaveLength(12);
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
       });
   });
 });

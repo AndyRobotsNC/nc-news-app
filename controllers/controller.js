@@ -1,5 +1,6 @@
 const {
   getTopicsData,
+  fetchAllArticles,
   fetchArticleData,
   fetchUpdatedVotes,
 } = require("../models/models");
@@ -11,7 +12,11 @@ exports.getTopics = (req, res, next) => {
     })
     .catch(next);
 };
-
+exports.getAllArticles = (req, res, next) => {
+  fetchAllArticles().then((articles) => {
+    res.status(200).send({ articles: articles });
+  });
+};
 exports.getArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   fetchArticleData(article_id)

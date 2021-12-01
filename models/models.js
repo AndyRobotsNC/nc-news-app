@@ -5,6 +5,32 @@ exports.getTopicsData = () => {
     return topics.rows;
   });
 };
+exports.fetchAllArticles = async () => {
+  const articles = db.query(`SELECT * FROM articles;`).then((articles) => {
+    return articles.rows;
+  });
+  const commentsInfo = await db.query(`
+    SELECT articles.article_id, 
+    COUNT(comment_id) AS number_of_comments 
+    FROM articles
+    LEFT JOIN comments on comments.article_id = articles.article_id
+    GROUP BY articles.article_id;`);
+
+  return Promise.all([articles, commentsInfo]).then(
+    ([articles, commentsInfo]) => {
+      articles.forEach((article) => {
+        let articleCommentCount = commentsInfo.rows.find((comment) => {
+          return comment.article_id === article.article_id;
+        });
+
+        article.comment_count = parseInt(
+          articleCommentCount.number_of_comments
+        );
+      });
+      return articles;
+    }
+  );
+};
 exports.fetchArticleData = async (id) => {
   const article = await db
     .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])

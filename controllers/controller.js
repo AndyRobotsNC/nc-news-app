@@ -4,6 +4,7 @@ const {
   fetchArticleData,
   fetchUpdatedVotes,
   fetchCommentsByID,
+  postNewCommentByID,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -46,5 +47,12 @@ exports.getCommentsByID = (req, res, next) => {
   const { article_id } = req.params;
   fetchCommentsByID(article_id).then((comments) => {
     res.status(200).send({ comments: comments });
+  });
+};
+exports.postCommentByID = (req, res, next) => {
+  const { article_id } = req.params;
+  const newComment = req.body;
+  postNewCommentByID(article_id, newComment).then((comment) => {
+    res.status(201).send({ comment: comment });
   });
 };

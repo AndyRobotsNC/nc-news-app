@@ -234,5 +234,29 @@ describe("GET /api/articles", () => {
     });
   });
 });
+describe("POST /api/articles/:article_id/comments", () => {
+  test("status 201: creates a new comment on a specified article", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "this is a test comment",
+    };
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            author: expect.any(String),
+            article_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            body: expect.any(String),
+          })
+        );
+      });
+  });
+});
 
 afterAll(() => db.end());

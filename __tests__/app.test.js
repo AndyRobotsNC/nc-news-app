@@ -257,6 +257,19 @@ describe("POST /api/articles/:article_id/comments", () => {
         );
       });
   });
+  test("status 404: returns error if username does not exist", () => {
+    const newComment = {
+      username: "not_a_username",
+      body: "this is a test comment",
+    };
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("User does not exist");
+      });
+  });
 });
 
 afterAll(() => db.end());

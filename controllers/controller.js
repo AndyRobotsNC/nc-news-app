@@ -7,6 +7,8 @@ const {
   postNewCommentByID,
 } = require("../models/models");
 
+const { checkValidUsername } = require("../errors/checkUsername");
+
 exports.getTopics = (req, res, next) => {
   getTopicsData()
     .then((topics) => {
@@ -18,13 +20,15 @@ exports.getAllArticles = (req, res, next) => {
   const sortBy = req.query.sort_by;
   const orderBy = req.query.order_by;
   const topic = req.query.topic;
-  fetchAllArticles(sortBy, orderBy, topic).then((articles) => {
-    if (articles.length === 0) {
-      res.status(404).send({ msg: "Topic not found" });
-    } else {
-      res.status(200).send({ articles: articles });
-    }
-  });
+  fetchAllArticles(sortBy, orderBy, topic)
+    .then((articles) => {
+      if (articles.length === 0) {
+        res.status(404).send({ msg: "Topic not found" });
+      } else {
+        res.status(200).send({ articles: articles });
+      }
+    })
+    .catch(next);
 };
 exports.getArticleByID = (req, res, next) => {
   const { article_id } = req.params;
@@ -45,14 +49,22 @@ exports.patchArticleByID = (req, res, next) => {
 };
 exports.getCommentsByID = (req, res, next) => {
   const { article_id } = req.params;
-  fetchCommentsByID(article_id).then((comments) => {
-    res.status(200).send({ comments: comments });
-  });
+  fetchCommentsByID(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments: comments });
+    })
+    .catch(next);
 };
 exports.postCommentByID = (req, res, next) => {
   const { article_id } = req.params;
-  const newComment = req.body;
-  postNewCommentByID(article_id, newComment).then((comment) => {
-    res.status(201).send({ comment: comment });
-  });
+  const { body } = req;
+
+  return checkValidUsername("username", body.username, "users")
+    .then(() => {
+      return postNewCommentByID(article_id, body);
+    })
+    .then((comment) => {
+      res.status(201).send({ comment: comment });
+    })
+    .catch(next);
 };

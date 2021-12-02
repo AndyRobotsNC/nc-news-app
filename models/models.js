@@ -113,9 +113,6 @@ exports.fetchCommentsByID = (id) => {
 };
 exports.postNewCommentByID = (article_id, comment) => {
   const { body, username } = comment;
-  const author = username;
-  const formattedComment = [[body, author, article_id]];
-
   const queryStr = format(
     `
   INSERT INTO comments
@@ -123,7 +120,7 @@ exports.postNewCommentByID = (article_id, comment) => {
   VALUES
   %L
   RETURNING *;`,
-    formattedComment
+    [[body, username, article_id]]
   );
   return db.query(queryStr).then(({ rows }) => {
     return rows[0];

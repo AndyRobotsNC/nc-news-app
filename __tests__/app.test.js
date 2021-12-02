@@ -210,6 +210,29 @@ describe("GET /api/articles", () => {
         });
     });
   });
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("status 200: returns an array of article comments", () => {
+      return request(app)
+        .get("/api/articles/9/comments")
+        .expect(200)
+        .then((res) => {
+          const { body } = res;
+          expect(body).toBeInstanceOf(Object);
+          expect(body.comments).toBeInstanceOf(Array);
+          expect(body.comments.length).toBe(2);
+          expect(body.comments[0]).toEqual(
+            expect.objectContaining({
+              body: expect.any(String),
+              votes: expect.any(Number),
+              author: expect.any(String),
+              article_id: expect.any(Number),
+              created_at: expect.any(String),
+              comment_id: expect.any(Number),
+            })
+          );
+        });
+    });
+  });
 });
 
 afterAll(() => db.end());

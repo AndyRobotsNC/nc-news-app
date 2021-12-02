@@ -3,6 +3,7 @@ const {
   fetchAllArticles,
   fetchArticleData,
   fetchUpdatedVotes,
+  fetchCommentsByID,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -40,4 +41,10 @@ exports.patchArticleByID = (req, res, next) => {
       res.status(200).send(updatedArticle);
     })
     .catch(next);
+};
+exports.getCommentsByID = (req, res, next) => {
+  const { article_id } = req.params;
+  fetchCommentsByID(article_id).then((comments) => {
+    res.status(200).send({ comments: comments });
+  });
 };

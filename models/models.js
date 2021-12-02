@@ -46,7 +46,6 @@ exports.fetchAllArticles = async (sort_by, order_by, sortTopic) => {
         let articleCommentCount = commentsInfo.rows.find((comment) => {
           return comment.article_id === article.article_id;
         });
-
         article.comment_count = parseInt(
           articleCommentCount.number_of_comments
         );
@@ -55,8 +54,8 @@ exports.fetchAllArticles = async (sort_by, order_by, sortTopic) => {
     }
   );
 };
-exports.fetchArticleData = async (id) => {
-  const article = await db
+exports.fetchArticleData = (id) => {
+  const article = db
     .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])
     .then(({ rows }) => {
       if (rows.length === 0) {
@@ -64,7 +63,7 @@ exports.fetchArticleData = async (id) => {
       }
       return rows;
     });
-  const commentsInfo = await db.query(`
+  const commentsInfo = db.query(`
     SELECT articles.article_id, 
     COUNT(comment_id) AS number_of_comments 
     FROM articles
@@ -99,5 +98,15 @@ exports.fetchUpdatedVotes = (id, votes) => {
     )
     .then(({ rows }) => {
       return { article: rows[0] };
+    });
+};
+exports.fetchCommentsByID = (id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE article_id = $1;`, [id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "No comments found" });
+      }
+      return rows;
     });
 };

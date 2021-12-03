@@ -295,13 +295,8 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 describe("DELETE /api/comments/:comment_id", () => {
-  test("status 204: deletes the comment at the given id, status message: no content", () => {
-    return request(app)
-      .delete(`/api/comments/1`)
-      .expect(204)
-      .then((res) => {
-        expect(res.body).toEqual({});
-      });
+  test("status 204: deletes the comment at the given id", () => {
+    return request(app).delete(`/api/comments/1`).expect(204);
   });
   test("status 404: returns an error when attempting to delete an invalid comment_id", () => {
     return request(app)
@@ -317,6 +312,24 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Invalid ID type");
+      });
+  });
+});
+describe("GET /api", () => {
+  test("status 200: responds with an array of all endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body).toBeInstanceOf(Object);
+        expect(body.endpoints).toEqual(
+          expect.objectContaining({
+            "GET /api": expect.any(Object),
+            "GET /api/topics": expect.any(Object),
+            "GET /api/articles": expect.any(Object),
+          })
+        );
       });
   });
 });

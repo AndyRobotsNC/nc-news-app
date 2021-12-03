@@ -6,10 +6,12 @@ const {
   handlePsqlErrors,
   handleServerErrors,
 } = require("./errors/index.js");
+const { getEndpoints } = require("./controllers/controller");
 
 app.use(express.json());
 
 app.use("/api", apiRouter);
+app.get("/api", getEndpoints);
 
 app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "Invalid path" });

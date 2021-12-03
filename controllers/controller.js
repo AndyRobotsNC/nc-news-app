@@ -6,6 +6,7 @@ const {
   fetchCommentsByID,
   postNewCommentByID,
   deleteComment,
+  getEndpointsData,
 } = require("../models/models");
 
 const { checkValidUsername, checkCommentID } = require("../errors/utils");
@@ -80,4 +81,9 @@ exports.deleteCommentByID = (req, res, next) => {
       res.status(204).send();
     })
     .catch(next);
+};
+exports.getEndpoints = (req, res, next) => {
+  getEndpointsData().then((data) => {
+    res.status(200).send({ endpoints: data });
+  });
 };

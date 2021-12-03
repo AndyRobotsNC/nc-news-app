@@ -271,5 +271,15 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+describe("DELETE /api/comments/:comment_id", () => {
+  test("status 204: deletes the comment at the given id, status message: no content", () => {
+    return request(app)
+      .delete(`/api/comments/1`)
+      .expect(204)
+      .then((res) => {
+        expect(res.body).toEqual({});
+      });
+  });
+});
 
 afterAll(() => db.end());

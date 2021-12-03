@@ -23,5 +23,59 @@
         }
       ]
     }
+  },
+  "GET /api/articles/": {
+    "description": "serves an object of the given article",
+    "queries": "any number that relates to an article example: 1",
+    "exampleResponse": {
+      "article": {
+        "title": "CSGO is just better than Valorant",
+        "topic": "gaming",
+        "author": "AndyRobots",
+        "body": "Text from the article..",
+        "created_at": 1527633953341
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of the comments for the given article",
+    "queries": "any number that relates to an article example: 1",
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+          "votes": -1,
+          "author": "tickle122",
+          "article_id": 18,
+          "created_at": 1590103140000
+        },
+        {
+          "body": "this is a test comment",
+          "votes": 20,
+          "author": "AndyRobots",
+          "article_id": 11,
+          "created_at": 1533103140000
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts the given comment on the requested article",
+    "queries": "any number that relates to an article example: 1",
+    "exampleCommentRequest": {
+      "username": "Jon123",
+      "body": "this is a test comment"
+    },
+    "exampleResponse": {
+      "body": "this is a test comment",
+      "votes": -5,
+      "author": "Jon123",
+      "article_id": 35,
+      "created_at": 1594890960000
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the given comment on the requested article",
+    "queries": "any number that relates to an article example: 1"
   }
 }

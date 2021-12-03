@@ -8,7 +8,7 @@ const {
   deleteComment,
 } = require("../models/models");
 
-const { checkValidUsername } = require("../errors/checkUsername");
+const { checkValidUsername, checkCommentID } = require("../errors/utils");
 
 exports.getTopics = (req, res, next) => {
   getTopicsData()
@@ -72,7 +72,12 @@ exports.postCommentByID = (req, res, next) => {
 exports.deleteCommentByID = (req, res, next) => {
   const { comment_id } = req.params;
 
-  deleteComment(comment_id).then((response) => {
-    res.status(204).send();
-  });
+  return checkCommentID("comment_id", comment_id, "comments")
+    .then(() => {
+      return deleteComment(comment_id);
+    })
+    .then((response) => {
+      res.status(204).send();
+    })
+    .catch(next);
 };

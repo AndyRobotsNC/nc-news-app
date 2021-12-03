@@ -267,7 +267,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toEqual("User does not exist");
+        expect(body.msg).toEqual("User not found");
       });
   });
 });
@@ -278,6 +278,22 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(204)
       .then((res) => {
         expect(res.body).toEqual({});
+      });
+  });
+  test("status 404: returns an error when attempting to delete an invalid comment_id", () => {
+    return request(app)
+      .delete(`/api/comments/9000`)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Comment not found");
+      });
+  });
+  test("status 400: returns an error when attempting to delete an invalid comment_id type", () => {
+    return request(app)
+      .delete(`/api/comments/abc`)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid ID type");
       });
   });
 });

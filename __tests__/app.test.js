@@ -6,6 +6,16 @@ const app = require("../app");
 
 beforeEach(() => seed(testData));
 
+describe("GET /not-a-route", () => {
+  test("should return an error when passed an invalid route", () => {
+    return request(app)
+      .get("/not-a-route")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid path");
+      });
+  });
+});
 describe("GET /api/topics", () => {
   test("status 200: returns an array of topic objects", () => {
     return request(app)
@@ -268,6 +278,19 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toEqual("User not found");
+      });
+  });
+  test("status 404: returns error with invalid username type", () => {
+    const newComment = {
+      username: 200,
+      body: "this is a test comment",
+    };
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("Invalid username type");
       });
   });
 });

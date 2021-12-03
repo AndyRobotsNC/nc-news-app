@@ -1,5 +1,5 @@
 {
-  "GET /api": {
+  "GET-/api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
@@ -24,7 +24,7 @@
       ]
     }
   },
-  "GET /api/articles/": {
+  "GET /api/articles/:article_id": {
     "description": "serves an object of the given article",
     "queries": "any number that relates to an article example: 1",
     "exampleResponse": {

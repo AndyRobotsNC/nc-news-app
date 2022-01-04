@@ -63,7 +63,7 @@ const seed = (data) => {
         (slug, description)
         VALUES
         %L
-        RETURNING *;`,
+        ;`,
         formattedTopics
       );
       return db.query(queryStr);
@@ -77,7 +77,7 @@ const seed = (data) => {
         (username, avatar_url, name)
         VALUES
         %L
-        RETURNING *;`,
+        ;`,
         formattedUsers
       );
       return db.query(queryStr);

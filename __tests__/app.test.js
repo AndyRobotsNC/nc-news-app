@@ -178,10 +178,10 @@ describe("GET /api/articles", () => {
         expect(res.body.msg).toBe("Invalid path");
       });
   });
-  describe("GET /api/articles?sort_by=&&order_by=&&topic=", () => {
+  describe("GET /api/articles?sort_by=&order_by=&topic=", () => {
     test("status 200: returns a sorted and ordered array", () => {
       return request(app)
-        .get("/api/articles?sort_by=title&&order_by=asc")
+        .get("/api/articles?sort_by=title&order_by=asc")
         .expect(200)
         .then((res) => {
           const { body } = res;
@@ -202,7 +202,7 @@ describe("GET /api/articles", () => {
     });
     test("status 200: defaults sorted_by date and descending", () => {
       return request(app)
-        .get("/api/articles?sort_by=profile&&order_by=a")
+        .get("/api/articles?sort_by=profile&order_by=a")
         .expect(200)
         .then((res) => {
           const { body } = res;

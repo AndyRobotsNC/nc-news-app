@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data/index.js");
 const seed = require("../db/seeds/seed.js");
 const request = require("supertest");
 const app = require("../app");
+const endpointFile = require("../endpoints.json");
 
 beforeEach(() => seed(testData));
 
@@ -335,7 +336,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
-describe.skip("GET /api", () => {
+describe.only("GET /api", () => {
   test("status 200: responds with an array of all endpoints", () => {
     return request(app)
       .get("/api")
@@ -343,17 +344,7 @@ describe.skip("GET /api", () => {
       .then((response) => {
         const { body } = response;
         expect(body).toBeInstanceOf(Object);
-        expect(body.endpoints).toEqual(
-          expect.objectContaining({
-            "GET /api": expect.any(Object),
-            "GET /api/topics": expect.any(Object),
-            "GET /api/articles": expect.any(Object),
-            "GET /api/articles/": expect.any(Object),
-            "GET /api/articles/:article_id/comments": expect.any(Object),
-            "POST /api/articles/:article_id/comments": expect.any(Object),
-            "DELETE /api/comments/:comment_id": expect.any(Object),
-          })
-        );
+        expect(body.endpoints).toEqual(endpointFile);
       });
   });
 });

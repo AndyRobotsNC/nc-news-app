@@ -105,6 +105,12 @@ exports.fetchUpdatedVotes = (id, votes) => {
   RETURNING *;`
     )
     .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "ID not found",
+        });
+      }
       return { article: rows[0] };
     });
 };

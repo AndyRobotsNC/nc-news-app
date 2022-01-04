@@ -135,6 +135,16 @@ describe.only("PATCH /api/articles/:article_id", () => {
         expect(res.body.msg).toBe("Invalid input");
       });
   });
+  test("status 404: non existent ID", () => {
+    const articleUpdate = { inc_votes: 100 };
+    return request(app)
+      .patch("/api/articles/9999")
+      .send(articleUpdate)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("ID not found");
+      });
+  });
 });
 describe("GET /api/articles", () => {
   test("status 200: returns an array of article objects", () => {

@@ -82,7 +82,7 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
-describe("PATCH /api/articles/:article_id", () => {
+describe.only("PATCH /api/articles/:article_id", () => {
   test("status 200: responds with the updated article", () => {
     const articleUpdate = {
       inc_votes: 1,
@@ -123,6 +123,16 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toEqual("malformed body/missing required fields");
+      });
+  });
+  test("status 400: invalid ID", () => {
+    const articleUpdate = { inc_votes: 100 };
+    return request(app)
+      .patch("/api/articles/hello")
+      .send(articleUpdate)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid input");
       });
   });
 });

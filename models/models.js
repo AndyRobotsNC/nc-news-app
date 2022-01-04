@@ -83,6 +83,12 @@ exports.fetchArticleData = (id) => {
   );
 };
 exports.fetchUpdatedVotes = (id, votes) => {
+  if (isNaN(id)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid input",
+    });
+  }
   if (isNaN(votes)) {
     return Promise.reject({
       status: 400,

@@ -82,7 +82,7 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
-describe.only("PATCH /api/articles/:article_id", () => {
+describe("PATCH /api/articles/:article_id", () => {
   test("status 200: responds with the updated article", () => {
     const articleUpdate = {
       inc_votes: 1,
@@ -335,7 +335,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
-describe("GET /api", () => {
+describe.skip("GET /api", () => {
   test("status 200: responds with an array of all endpoints", () => {
     return request(app)
       .get("/api")

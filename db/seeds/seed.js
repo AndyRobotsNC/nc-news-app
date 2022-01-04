@@ -37,8 +37,8 @@ const seed = (data) => {
         title VARCHAR(100) NOT NULL,
         body TEXT NOT NULL,
         votes INTEGER DEFAULT 0,
-        topic VARCHAR(50) REFERENCES topics (slug),
-        author VARCHAR(50) REFERENCES users (username),
+        topic VARCHAR(50) REFERENCES topics (slug) NOT NULL,
+        author VARCHAR(50) REFERENCES users (username) NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         comment_count INTEGER DEFAULT 0
       );`);
@@ -47,8 +47,8 @@ const seed = (data) => {
       return db.query(`
       CREATE TABLE comments (
         comment_id SERIAL PRIMARY KEY,
-        author VARCHAR(50) REFERENCES users (username),
-        article_id INTEGER REFERENCES articles (article_id),
+        author VARCHAR(50) REFERENCES users (username) NOT NULL,
+        article_id INTEGER REFERENCES articles (article_id) NOT NULL,
         votes INTEGER DEFAULT 0,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         body TEXT NOT NULL

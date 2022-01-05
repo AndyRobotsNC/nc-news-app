@@ -7,6 +7,7 @@ const {
   postNewCommentByID,
   deleteComment,
   getEndpointsData,
+  getUserData,
 } = require("../models/models");
 
 const { checkValidUsername, checkCommentID } = require("../errors/utils");
@@ -85,5 +86,10 @@ exports.deleteCommentByID = (req, res, next) => {
 exports.getEndpoints = (req, res, next) => {
   getEndpointsData().then((data) => {
     res.status(200).send({ endpoints: data });
+  });
+};
+exports.getUsers = (req, res, next) => {
+  getUserData().then((data) => {
+    res.status(200).send({ users: data });
   });
 };

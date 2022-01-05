@@ -336,7 +336,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
-describe.only("GET /api", () => {
+describe("GET /api", () => {
   test("status 200: responds with an array of all endpoints", () => {
     return request(app)
       .get("/api")
@@ -345,6 +345,17 @@ describe.only("GET /api", () => {
         const { body } = response;
         expect(body).toBeInstanceOf(Object);
         expect(body.endpoints).toEqual(endpointFile);
+      });
+  });
+});
+describe("GET /api/users", () => {
+  test("status 200: responds with an array of user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body.users).toBeInstanceOf(Array);
       });
   });
 });

@@ -151,3 +151,8 @@ exports.getEndpointsData = () => {
     return JSON.parse(data);
   });
 };
+exports.getUserData = () => {
+  return db.query(`SELECT * FROM users`).then((users) => {
+    return users.rows;
+  });
+};

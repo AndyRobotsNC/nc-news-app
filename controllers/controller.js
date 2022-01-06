@@ -8,6 +8,7 @@ const {
   deleteComment,
   getEndpointsData,
   getUserData,
+  fetchSingleUser,
 } = require("../models/models");
 
 const { checkValidUsername, checkCommentID } = require("../errors/utils");
@@ -89,7 +90,17 @@ exports.getEndpoints = (req, res, next) => {
   });
 };
 exports.getUsers = (req, res, next) => {
-  getUserData().then((data) => {
-    res.status(200).send({ users: data });
-  });
+  getUserData()
+    .then((data) => {
+      res.status(200).send({ users: data });
+    })
+    .catch(next);
+};
+exports.getUserInfo = (req, res, next) => {
+  const { user } = req.params;
+  fetchSingleUser(user)
+    .then((data) => {
+      res.status(200).send({ user: data });
+    })
+    .catch(next);
 };

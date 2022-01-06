@@ -156,3 +156,13 @@ exports.getUserData = () => {
     return users.rows;
   });
 };
+exports.fetchSingleUser = (user) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1;`, [user])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return rows;
+    });
+};

@@ -7,7 +7,7 @@ exports.getTopicsData = () => {
     return topics.rows;
   });
 };
-exports.fetchAllArticles = async (sort_by, order_by, sortTopic) => {
+exports.fetchAllArticles = (sort_by, order_by, sortTopic) => {
   if (
     ![
       "author",
@@ -26,35 +26,41 @@ exports.fetchAllArticles = async (sort_by, order_by, sortTopic) => {
   }
 
   let queryStr = "";
+  // if (typeof sortTopic === "undefined") {
+  //   queryStr = `SELECT * FROM articles ORDER BY ${sort_by} ${order_by};`;
+  // } else {
+  //   queryStr = `SELECT * FROM articles WHERE topic = '${sortTopic}' ORDER BY ${sort_by} ${order_by};`;
+  // }
   if (typeof sortTopic === "undefined") {
-    queryStr = `SELECT * FROM articles ORDER BY ${sort_by} ${order_by};`;
+    queryStr = `SELECT articles.*, COUNT(comments.article_id)::INTEGER AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY ${sort_by} ${order_by};`;
   } else {
-    queryStr = `SELECT * FROM articles WHERE topic = '${sortTopic}' ORDER BY ${sort_by} ${order_by};`;
+    queryStr = `SELECT articles.*, COUNT(comments.article_id)::INTEGER AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE topic = '${sortTopic}' GROUP BY articles.article_id ORDER BY ${sort_by} ${order_by};`;
   }
 
-  const articles = db.query(queryStr).then((articles) => {
+  return db.query(queryStr).then((articles) => {
+    console.log(articles);
     return articles.rows;
   });
-  const commentsInfo = db.query(`
-    SELECT articles.article_id, 
-    COUNT(comment_id) AS number_of_comments 
-    FROM articles
-    LEFT JOIN comments on comments.article_id = articles.article_id
-    GROUP BY articles.article_id;`);
+  // const commentsInfo = db.query(`
+  //   SELECT articles.article_id,
+  //   COUNT(comment_id) AS number_of_comments
+  //   FROM articles
+  //   LEFT JOIN comments on comments.article_id = articles.article_id
+  //   GROUP BY articles.article_id;`);
 
-  return Promise.all([articles, commentsInfo]).then(
-    ([articles, commentsInfo]) => {
-      articles.forEach((article) => {
-        let articleCommentCount = commentsInfo.rows.find((comment) => {
-          return comment.article_id === article.article_id;
-        });
-        article.comment_count = parseInt(
-          articleCommentCount.number_of_comments
-        );
-      });
-      return articles;
-    }
-  );
+  // return Promise.all([articles, commentsInfo]).then(
+  //   ([articles, commentsInfo]) => {
+  //     articles.forEach((article) => {
+  //       let articleCommentCount = commentsInfo.rows.find((comment) => {
+  //         return comment.article_id === article.article_id;
+  //       });
+  //       article.comment_count = parseInt(
+  //         articleCommentCount.number_of_comments
+  //       );
+  //     });
+  //     return articles;
+  //   }
+  // );
 };
 exports.fetchArticleData = (id) => {
   const article = db

@@ -147,7 +147,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
-describe("GET /api/articles", () => {
+describe.only("GET /api/articles", () => {
   test("status 200: returns an array of article objects", () => {
     return request(app)
       .get("/api/articles")
@@ -359,14 +359,14 @@ describe("GET /api/users", () => {
       });
   });
 });
-describe.only("GET /api/users/:username", () => {
+describe("GET /api/users/:username", () => {
   test("status 200: responds with a single user", () => {
     return request(app)
       .get("/api/users/butter_bridge")
       .expect(200)
       .then((response) => {
         const { body } = response;
-        console.log(body);
+
         expect(body.user[0].username).toBe("butter_bridge");
         expect(body.user[0].name).toBe("jonny");
         expect(body.user[0].avatar_url).toBe(

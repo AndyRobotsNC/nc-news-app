@@ -34,6 +34,7 @@ exports.fetchAllArticles = (sort_by, order_by, sortTopic) => {
   }
 
   return db.query(queryStr).then((articles) => {
+    console.log(articles.rows);
     return articles.rows;
   });
 };

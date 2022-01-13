@@ -101,7 +101,6 @@ describe("PATCH /api/articles/:article_id", () => {
             votes: 1,
             topic: expect.any(String),
             author: expect.any(String),
-            comment_count: expect.any(Number),
           })
         );
       });
@@ -147,7 +146,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
-describe.only("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   test("status 200: returns an array of article objects", () => {
     return request(app)
       .get("/api/articles")
@@ -238,6 +237,27 @@ describe.only("GET /api/articles", () => {
         .expect(404)
         .then((res) => {
           expect(res.body.msg).toBe("Topic not found");
+        });
+    });
+    test("status 200: responds with an array of articles sorted by comment count", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count")
+        .expect(200)
+        .then((res) => {
+          const { body } = res;
+          expect(body).toBeInstanceOf(Object);
+          expect(body.articles).toHaveLength(12);
+          expect(body.articles[0]).toEqual(
+            expect.objectContaining({
+              author: "butter_bridge",
+              title: "Living in the shadow of a great man",
+              article_id: 1,
+              topic: "mitch",
+              created_at: "2020-07-09T21:11:00.000Z",
+              votes: 100,
+              comment_count: 11,
+            })
+          );
         });
     });
   });
